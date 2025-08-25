@@ -1,0 +1,38 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binaries and coverage
+*.test
+coverage.out
+
+# Dependency directory (if vendoring)
+# vendor/
+
+# Godep (if used)
+Godeps/
+
+# IDE/editor directories
+.vscode/
+.idea/
+*.sw?
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs and temp files
+*.log
+*~
+
+.env*.local
+
+# Nix
+/result
+.direnv
+flakegarden
+testing

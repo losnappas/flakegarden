@@ -1,0 +1,118 @@
+{
+  description = "A basic flake";
+
+  inputs = {
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    systems.url = "github:nix-systems/default";
+    flake-root.url = "github:srid/flake-root";
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs =
+    inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [
+        inputs.flake-root.flakeModule
+        inputs.treefmt-nix.flakeModule
+        inputs.flake-parts.flakeModules.flakeModules
+      ];
+      systems = import inputs.systems;
+      perSystem =
+        {
+          config,
+          inputs',
+          lib,
+          pkgs,
+          system,
+          ...
+        }:
+        {
+
+          # Per-system attributes can be defined here. The self' and inputs'
+          # module parameters provide easy access to attributes of the same
+          # system.
+          packages.default = config.packages.flakegarden;
+
+          treefmt = {
+            inherit (config.flake-root) projectRootFile;
+            programs = {
+              nixfmt.enable = true;
+              gofmt.enable = true;
+              gofumpt.enable = true;
+              goimports.enable = true;
+              golines.enable = true;
+            };
+          };
+
+          devShells.default = pkgs.mkShell {
+            # Sets up FLAKE_ROOT var.
+            inputsFrom = [ config.flake-root.devShell ];
+            packages = with pkgs; [
+              nil
+              go
+              gopls
+              delve
+              gomodifytags
+              impl
+              go-tools
+              gotests
+            ];
+            env = {
+              PROJECT_FORMATTER = lib.getExe config.formatter;
+            };
+          };
+
+          packages.flakegarden = pkgs.buildGoModule {
+            pname = "flakegarden";
+            version = "1.0.0";
+            src = ./.;
+            subPackages = [ "cmd/flakegarden" ];
+            vendorHash = "sha256-KlnUiOiinxbXYo+OHK/b5pmikJ34X0AgXFhLuN9uQNY=";
+
+            meta = with lib; {
+              description = "Shadcn-like flakes";
+              homepage = "https://github.com/losnappas/flakegarden";
+              license = licenses.unlicense;
+            };
+          };
+
+        };
+      flake = rec {
+        # The usual flake attributes can be defined here, including system-
+        # agnostic ones like nixosModule and system-enumerating ones, although
+        # those are more easily expressed in perSystem.
+
+        # A small lib for flake consumers
+        lib = {
+          # Usage:
+          # - `imports = inputs.flakegarden.lib.importDir ./nix;`
+          importDir =
+            dir:
+            inputs.nixpkgs.lib.mapAttrsToList (path: _: inputs.nixpkgs.lib.path.append dir path) (
+              builtins.readDir dir
+            );
+
+          # Combine different make-shells shells into one.
+          combineMakeShells =
+            shells: excluding:
+            builtins.map (cfg: cfg.finalPackage) (builtins.attrValues (builtins.removeAttrs shells excluding));
+
+        };
+
+        # Flake module that wires make-shells.default.inputsFrom like in testing example
+        flakeModule = {
+          perSystem =
+            { config, inputs', ... }:
+            {
+              make-shells.default.inputsFrom = lib.combineMakeShells config.make-shells [ "default" ];
+              make-shells.default.packages = [ inputs'.flakegarden.packages.default ];
+            };
+        };
+
+      };
+    };
+}
