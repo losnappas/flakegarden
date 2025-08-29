@@ -3,6 +3,7 @@
   treefmt.programs = {
     ruff-check.enable = true;
     ruff-format.enable = true;
+    # black.enable = true;
   };
 
   make-shells.python = {

@@ -33,7 +33,7 @@
           ...
         }:
         {
-          imports = inputs.flakegarden.lib.importDir ./nix;
+          imports = inputs.flakegarden.lib.importDir ./nix/garden;
 
           treefmt = {
             inherit (config.flake-root) projectRootFile;
@@ -51,10 +51,10 @@
               pkgs.nil
             ];
 
-            shellHook = ''
-              echo testing
-            '';
+            # shellHook = ''
+            # '';
 
+            # Run treefmt fast via `$PROJECT_FORMATTER files...`.
             env.PROJECT_FORMATTER = lib.getExe config.formatter;
           };
 
