@@ -113,6 +113,10 @@
             };
         };
 
+        templates.default = {
+          path = ./template;
+          description = "Default flakegarden template";
+        };
       };
     };
 }
