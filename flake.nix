@@ -92,9 +92,12 @@
           # - `imports = inputs.flakegarden.lib.importDir ./nix;`
           importDir =
             dir:
-            inputs.nixpkgs.lib.mapAttrsToList (path: _: inputs.nixpkgs.lib.path.append dir path) (
-              builtins.readDir dir
-            );
+            if builtins.pathExists dir then
+              inputs.nixpkgs.lib.mapAttrsToList (path: _: inputs.nixpkgs.lib.path.append dir path) (
+                builtins.readDir dir
+              )
+            else
+              [ ];
 
           # Combine different make-shells shells into one.
           combineMakeShells =
