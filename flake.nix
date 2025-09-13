@@ -81,7 +81,7 @@
           };
 
         };
-      flake = rec {
+      flake = {
         # The usual flake attributes can be defined here, including system-
         # agnostic ones like nixosModule and system-enumerating ones, although
         # those are more easily expressed in perSystem.
@@ -99,20 +99,35 @@
             else
               [ ];
 
-          # Combine different make-shells shells into one.
-          combineMakeShells =
-            shells: excluding:
-            builtins.map (cfg: cfg.finalPackage) (builtins.attrValues (builtins.removeAttrs shells excluding));
-
         };
 
-        # Flake module that wires make-shells.default.inputsFrom like in testing example
+        # Flake module that wires make-shells.default, combining all subshells.
         flakeModule = {
           perSystem =
-            { config, inputs', ... }:
             {
-              make-shells.default.inputsFrom = lib.combineMakeShells config.make-shells [ "default" ];
-              make-shells.default.packages = [ inputs'.flakegarden.packages.default ];
+              config,
+              inputs',
+              self',
+              ...
+            }:
+            {
+              make-shells.default = {
+                imports =
+                  let
+                    others = builtins.removeAttrs config.make-shells [ "default" ];
+                    # Use other shells' option sets directly; drop computed fields.
+                    asModules = builtins.map (
+                      cfg:
+                      builtins.removeAttrs cfg [
+                        "finalPackage"
+                        "stdenv"
+                        "finalEnv"
+                      ]
+                    ) (builtins.attrValues others);
+                  in
+                  asModules;
+                packages = [ inputs'.flakegarden.packages.default ];
+              };
             };
         };
 
