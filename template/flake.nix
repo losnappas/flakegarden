@@ -7,8 +7,6 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     treefmt-nix.url = "github:numtide/treefmt-nix";
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
-    make-shell.url = "github:nicknovitski/make-shell";
-    flake-root.url = "github:srid/flake-root";
 
     flakegarden.url = "github:losnappas/flakegarden";
     flakegarden.inputs.nixpkgs.follows = "nixpkgs";
@@ -18,9 +16,7 @@
     inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
-        inputs.flake-root.flakeModule
         inputs.treefmt-nix.flakeModule
-        inputs.make-shell.flakeModules.default
         inputs.flakegarden.flakeModule
       ];
       systems = import inputs.systems;
@@ -43,10 +39,6 @@
           };
 
           make-shells.default = {
-            inputsFrom = [
-              config.flake-root.devShell
-            ];
-
             packages = [
               pkgs.nil
             ];

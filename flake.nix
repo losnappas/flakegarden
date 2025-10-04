@@ -10,6 +10,7 @@
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    make-shell.url = "github:nicknovitski/make-shell";
   };
 
   outputs =
@@ -103,6 +104,10 @@
 
         # Flake module that wires make-shells.default, combining all subshells.
         flakeModule = {
+          imports = [
+            inputs.make-shell.flakeModules.default
+            inputs.flake-root.flakeModule
+          ];
           perSystem =
             {
               config,
@@ -112,6 +117,9 @@
             }:
             {
               make-shells.default = {
+                inputsFrom = [
+                  config.flake-root.devShell
+                ];
                 imports =
                   let
                     others = builtins.removeAttrs config.make-shells [ "default" ];
