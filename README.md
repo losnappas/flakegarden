@@ -27,6 +27,8 @@ Or directly
 
 Files will be added to `./nix/garden/[file].nix`, and you can modify them as you will.
 
+`$ git add nix/garden`
+
 You will then be able to `nix develop`, the modules are merged into the default shell.
 
 direnv users: use `direnv reload` after adding or modifying a flakegarden file.
