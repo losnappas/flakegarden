@@ -17,6 +17,16 @@ Initialize a flake:
 
 `nix flake init -t "github:losnappas/flakegarden"`
 
-Add modules you need: 
+Add modules you need, via the picker:
+
+`$ flakegarden add`
+
+Or directly
 
 `$ flakegarden add python`
+
+Files will be added to `./nix/garden/[file].nix`, and you can modify them as you will.
+
+You will then be able to `nix develop`, the modules are merged into the default shell.
+
+direnv users: use `direnv reload` after adding or modifying a flakegarden file.
