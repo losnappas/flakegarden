@@ -17,7 +17,7 @@
 
     shellHook = ''
       unset PYTHONPATH # Drops nix-provided python packages.
-      uv -q venv --allow-existing
+      [[ -d .venv ]] || uv -q venv --allow-existing
       source .venv/bin/activate
     '';
 
