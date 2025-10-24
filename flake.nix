@@ -42,10 +42,7 @@
             inherit (config.flake-root) projectRootFile;
             programs = {
               nixfmt.enable = true;
-              gofmt.enable = true;
-              gofumpt.enable = true;
-              goimports.enable = true;
-              golines.enable = true;
+              shfmt.enable = true;
             };
           };
 
@@ -53,34 +50,29 @@
             # Sets up FLAKE_ROOT var.
             inputsFrom = [ config.flake-root.devShell ];
             packages = with pkgs; [
-              nil
-              go
-              gopls
-              delve
-              gomodifytags
-              impl
-              go-tools
-              gotests
+              config.packages.flakegarden
+              fzf
             ];
             env = {
               PROJECT_FORMATTER = lib.getExe config.formatter;
             };
           };
 
-          packages.flakegarden = pkgs.buildGoModule {
-            pname = "flakegarden";
-            version = "1.0.0";
+          packages.flakegarden = pkgs.stdenv.mkDerivation {
+            name = "flakegarden";
             src = ./.;
-            subPackages = [ "cmd/flakegarden" ];
-            vendorHash = "sha256-KlnUiOiinxbXYo+OHK/b5pmikJ34X0AgXFhLuN9uQNY=";
-
-            meta = with lib; {
-              description = "Shadcn-like flakes";
-              homepage = "https://github.com/losnappas/flakegarden";
-              license = licenses.unlicense;
-            };
+            buildInputs = with pkgs; [
+              fzf
+            ];
+            installPhase = ''
+              mkdir -p $out/bin
+              cp -r ${./templates} $out/templates
+              cp ${./flakegarden.sh} $out/bin/flakegarden
+              chmod +x $out/bin/flakegarden
+              substituteInPlace $out/bin/flakegarden \
+                --replace-fail "TEMPLATES_DIR=\"templates\"" "TEMPLATES_DIR=\"$out/templates\""
+            '';
           };
-
         };
       flake = {
         # The usual flake attributes can be defined here, including system-

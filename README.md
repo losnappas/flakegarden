@@ -17,13 +17,15 @@ Initialize a flake:
 
 `nix flake init -t "github:losnappas/flakegarden"`
 
-Add modules you need, via the picker:
+Add modules you need:
 
-`$ flakegarden add`
+- To pick from a list of available templates:
 
-Or directly
+  `flakegarden add`
 
-`$ flakegarden add python`
+- To add a specific template (e.g., `python`):
+
+  `flakegarden add python`
 
 Files will be added to `./nix/garden/[file].nix`, and you can modify them as you will.
 
