@@ -2,6 +2,7 @@
 set -euo pipefail
 
 TEMPLATES_DIR="templates"
+VERSION="dev"
 
 # Function to display help message
 show_help() {
@@ -11,6 +12,7 @@ show_help() {
   echo "  add [template]    Add a new template to your project."
   echo "                    If no template is specified, a list of available templates will be shown."
   echo "  --help            Show this help message."
+  echo "  --version         Show version info."
 }
 
 # Function to add a template
@@ -40,6 +42,9 @@ add_template() {
 case "${1:-}" in
 --help)
   show_help
+  ;;
+--version)
+  echo "v$VERSION"
   ;;
 add)
   add_template "${2:-}"

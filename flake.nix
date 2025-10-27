@@ -14,7 +14,7 @@
   };
 
   outputs =
-    inputs@{ flake-parts, ... }:
+    inputs@{ flake-parts, self, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         inputs.flake-root.flakeModule
@@ -70,7 +70,10 @@
               cp ${./flakegarden.sh} $out/bin/flakegarden
               chmod +x $out/bin/flakegarden
               substituteInPlace $out/bin/flakegarden \
-                --replace-fail "TEMPLATES_DIR=\"templates\"" "TEMPLATES_DIR=\"$out/templates\""
+                --replace-fail "TEMPLATES_DIR=\"templates\"" "TEMPLATES_DIR=\"$out/templates\"" \
+                --replace-fail "VERSION=\"dev\"" "VERSION=\"git-${
+                  self.shortRev or self.dirtyShortRev or "unknown"
+                }\""
             '';
           };
         };
