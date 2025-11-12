@@ -11,6 +11,7 @@
       package-version-server
       vscode-langservers-extracted
       tailwindcss-language-server
+      biome
 
       bun
       # nodejs
