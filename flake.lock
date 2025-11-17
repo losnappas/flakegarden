@@ -54,15 +54,16 @@
         "flake-compat": "flake-compat"
       },
       "locked": {
-        "lastModified": 1733933815,
-        "narHash": "sha256-9JjM7eT66W4NJAXpGUsdyAFXhBxFWR2Z9LZwUa7Hli0=",
-        "owner": "nicknovitski",
+        "lastModified": 1762614022,
+        "narHash": "sha256-lppCe4iriVqcbD9bLl+eNGjcUJNyNkGXmgJlkbnZ5rQ=",
+        "owner": "losnappas",
         "repo": "make-shell",
-        "rev": "ffeceae9956df03571ea8e96ef77c2924f13a63c",
+        "rev": "d1eae0561df606a61f99c3f1021d01ffba21078b",
         "type": "github"
       },
       "original": {
-        "owner": "nicknovitski",
+        "owner": "losnappas",
+        "ref": "push-zqrovqxruunu",
         "repo": "make-shell",
         "type": "github"
       }
