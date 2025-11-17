@@ -10,7 +10,8 @@
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    make-shell.url = "github:nicknovitski/make-shell";
+    # https://github.com/nicknovitski/make-shell/pull/17
+    make-shell.url = "github:losnappas/make-shell";
   };
 
   outputs =
@@ -125,6 +126,7 @@
                         "finalPackage"
                         "stdenv"
                         "finalEnv"
+                        "mergedEnv"
                       ]
                     ) (builtins.attrValues others);
                   in
