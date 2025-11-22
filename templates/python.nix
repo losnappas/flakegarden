@@ -1,4 +1,7 @@
 { pkgs, lib, ... }:
+let
+  python = pkgs.python3;
+in
 {
   treefmt.programs = {
     ruff-check.enable = true;
@@ -8,7 +11,7 @@
 
   make-shells.python = {
     packages = with pkgs; [
-      python3
+      python
       uv
 
       basedpyright
@@ -24,7 +27,7 @@
     env = {
       UV_PYTHON_DOWNLOADS = "never";
       UV_NO_MANAGED_PYTHON = "1";
-      UV_PYTHON = pkgs.python3.interpreter;
+      UV_PYTHON = python.interpreter;
     }
     // lib.optionalAttrs pkgs.stdenv.isLinux {
       # Setting LD_LIBRARY_PATH makes the dynamic library loader aware of libraries without using RPATH for lookup.
@@ -78,7 +81,7 @@
   #     };
   #     pythonSet =
   #       (pkgs.callPackage pyproject-nix.build.packages {
-  #         python = pkgs.python3;
+  #         inherit python;
   #       }).overrideScope
   #         (
   #           pkgs.lib.composeManyExtensions [
