@@ -27,7 +27,11 @@ in
     env = {
       UV_PYTHON_DOWNLOADS = "never";
       UV_NO_MANAGED_PYTHON = "1";
-      UV_PYTHON = python.interpreter;
+      # https://docs.astral.sh/uv/guides/integration/pytorch/#automatic-backend-selection
+      # Have `uv pip install torch` autodetect GPU.
+      UV_TORCH_BACKEND = "auto";
+      # Breaks `uv pip` command, and uv should default to venv one anyway.
+      # UV_PYTHON = python.interpreter;
     }
     // lib.optionalAttrs pkgs.stdenv.isLinux {
       # Setting LD_LIBRARY_PATH makes the dynamic library loader aware of libraries without using RPATH for lookup.
