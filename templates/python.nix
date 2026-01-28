@@ -29,7 +29,8 @@ in
       UV_NO_MANAGED_PYTHON = "1";
       # https://docs.astral.sh/uv/guides/integration/pytorch/#automatic-backend-selection
       # Have `uv pip install torch` autodetect GPU.
-      UV_TORCH_BACKEND = "auto";
+      # But it's not infallible, so you likely want to set this variable directly to the version you want (e.g. "cu126") in your system config, instead.
+      # UV_TORCH_BACKEND = "auto";
       # Breaks `uv pip` command, and uv should default to venv one anyway.
       # UV_PYTHON = python.interpreter;
     }
